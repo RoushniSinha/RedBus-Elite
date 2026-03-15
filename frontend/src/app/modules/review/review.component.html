@@ -1,0 +1,201 @@
+<section class="min-h-screen bg-white dark:bg-black px-4 py-10 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Rate &amp; Review</h1>
+      <p class="mt-1 text-gray-500 dark:text-gray-400">Share your experience — every score shapes the Elite ranking</p>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading()" class="flex items-center justify-center h-64">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+    </div>
+
+    <div *ngIf="!loading()" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- ── Review Submission Form ── -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow">
+
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Submit a Review</h2>
+
+        <!-- Route Selector -->
+        <div class="mb-5">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Route</label>
+          <select
+            [ngModel]="form().routeId"
+            (ngModelChange)="updateForm('routeId', $event)"
+            class="w-full rounded-lg border border-gray-300 dark:border-gray-700
+                   bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                   px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none">
+            <option *ngFor="let route of routes()" [value]="route.id">
+              {{ route.origin }} → {{ route.destination }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Dimensional Ratings -->
+        <div class="mb-5 space-y-4">
+          <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+            Ratings
+          </h3>
+
+          <!-- Punctuality -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-sm text-gray-700 dark:text-gray-300">⏱ Punctuality</label>
+              <span class="text-sm font-bold text-red-500">{{ form().scores.punctuality }}/5</span>
+            </div>
+            <div class="flex gap-2">
+              <button *ngFor="let star of getStarArray()"
+                      (click)="updateScore('punctuality', star)"
+                      class="w-8 h-8 rounded-full text-sm font-bold transition-all"
+                      [ngClass]="form().scores.punctuality >= star
+                        ? 'bg-red-500 text-white shadow-md'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-100'">
+                {{ star }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Cleanliness -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-sm text-gray-700 dark:text-gray-300">🧹 Cleanliness</label>
+              <span class="text-sm font-bold text-red-500">{{ form().scores.cleanliness }}/5</span>
+            </div>
+            <div class="flex gap-2">
+              <button *ngFor="let star of getStarArray()"
+                      (click)="updateScore('cleanliness', star)"
+                      class="w-8 h-8 rounded-full text-sm font-bold transition-all"
+                      [ngClass]="form().scores.cleanliness >= star
+                        ? 'bg-red-500 text-white shadow-md'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-100'">
+                {{ star }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Amenities -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-sm text-gray-700 dark:text-gray-300">🪑 Amenities</label>
+              <span class="text-sm font-bold text-red-500">{{ form().scores.amenities }}/5</span>
+            </div>
+            <div class="flex gap-2">
+              <button *ngFor="let star of getStarArray()"
+                      (click)="updateScore('amenities', star)"
+                      class="w-8 h-8 rounded-full text-sm font-bold transition-all"
+                      [ngClass]="form().scores.amenities >= star
+                        ? 'bg-red-500 text-white shadow-md'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-100'">
+                {{ star }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-time Average Score Display -->
+        <div class="mb-5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
+          <div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Elite Average Score</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+              (Punctuality + Cleanliness + Amenities) ÷ 3
+            </p>
+          </div>
+          <span class="text-3xl font-black" [ngClass]="getScoreColor(liveAverage())">
+            {{ liveAverage() }}
+          </span>
+        </div>
+
+        <!-- Comment -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Comment</label>
+          <textarea
+            [ngModel]="form().comment"
+            (ngModelChange)="updateForm('comment', $event)"
+            rows="4"
+            placeholder="Share your journey experience..."
+            class="w-full rounded-lg border border-gray-300 dark:border-gray-700
+                   bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                   px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none
+                   resize-none placeholder-gray-400">
+          </textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          (click)="submitReview()"
+          [disabled]="submitting()"
+          class="w-full py-3 rounded-xl font-semibold text-white transition-all
+                 bg-red-600 hover:bg-red-700 active:bg-red-800
+                 disabled:opacity-60 disabled:cursor-not-allowed
+                 focus:outline-none focus:ring-2 focus:ring-red-500">
+          <span *ngIf="!submitting()">Submit Review</span>
+          <span *ngIf="submitting()" class="flex items-center justify-center gap-2">
+            <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            Submitting…
+          </span>
+        </button>
+
+        <!-- Success Message -->
+        <div *ngIf="submitted()"
+             class="mt-3 rounded-lg bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-700 dark:text-green-300 text-center">
+          ✅ Review submitted! Thank you for your feedback.
+        </div>
+
+      </div>
+
+      <!-- ── Existing Reviews Feed ── -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          Recent Reviews ({{ reviews().length }})
+        </h2>
+
+        <div class="space-y-4 max-h-[680px] overflow-y-auto pr-1">
+          <article *ngFor="let review of reviews()"
+                   class="rounded-xl border border-gray-200 dark:border-gray-800
+                          bg-white dark:bg-gray-900 p-4 shadow-sm">
+
+            <!-- Route + Date -->
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-semibold text-red-500">{{ getRouteLabel(review.routeId) }}</span>
+              <span class="text-xs text-gray-400">{{ review.date | date:'mediumDate' }}</span>
+            </div>
+
+            <!-- Score bars -->
+            <div class="grid grid-cols-3 gap-2 mb-3 text-center">
+              <div class="rounded-lg bg-gray-50 dark:bg-gray-800 p-2">
+                <p class="text-xs text-gray-400 dark:text-gray-500">Punctuality</p>
+                <p class="text-lg font-bold text-gray-800 dark:text-white">{{ review.scores.punctuality }}</p>
+              </div>
+              <div class="rounded-lg bg-gray-50 dark:bg-gray-800 p-2">
+                <p class="text-xs text-gray-400 dark:text-gray-500">Cleanliness</p>
+                <p class="text-lg font-bold text-gray-800 dark:text-white">{{ review.scores.cleanliness }}</p>
+              </div>
+              <div class="rounded-lg bg-gray-50 dark:bg-gray-800 p-2">
+                <p class="text-xs text-gray-400 dark:text-gray-500">Amenities</p>
+                <p class="text-lg font-bold text-gray-800 dark:text-white">{{ review.scores.amenities }}</p>
+              </div>
+            </div>
+
+            <!-- Elite average (uses pipe) -->
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Elite Average Score</span>
+              <span class="text-xl font-black" [ngClass]="getScoreColor(review.scores | averageScore)">
+                {{ review.scores | averageScore }}
+              </span>
+            </div>
+
+            <!-- Comment -->
+            <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              "{{ review.comment }}"
+            </p>
+
+          </article>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

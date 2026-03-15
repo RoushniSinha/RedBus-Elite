@@ -3,13 +3,14 @@ declare var google:any;
 import { CustomerService } from '../../service/customer.service';
 import { Customer } from '../../model/customer.model';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../service/theme.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit{
-constructor(private router:Router,private customerservice:CustomerService){}
+constructor(private router:Router,private customerservice:CustomerService, public themeService: ThemeService){}
 isloggedIn:boolean=false
 ngOnInit(): void {
   if(sessionStorage.getItem("Loggedinuser")){
