@@ -17,11 +17,12 @@ app.use(customerroutes)
 
 const DBURL=process.env.MONGODB_URI
 if (!DBURL) {
-    throw new Error('MONGODB_URI environment variable is not set. Please configure it in your .env file.')
+    console.error('Warning: MONGODB_URI environment variable is not set. Database features will be unavailable.')
+} else {
+    mongoose.connect(DBURL)
+    .then(()=> console.log("MongoDB connected"))
+    .catch(err=> console.error('MongoDB connection error:', err))
 }
-mongoose.connect(DBURL)
-.then(()=> console.log("Mongodb connected"))
-.catch(err=> console.error('Mongodb connection error:' ,err))
 
 app.get('/',(req,res)=>{
     res.send('Hello , Ted bus is working')
