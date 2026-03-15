@@ -33,6 +33,8 @@ import { PaymentPageComponent } from './Component/payment-page/payment-page.comp
 import { ProfilePageComponent } from './Component/profile-page/profile-page.component';
 import { MyTripComponent } from './Component/profile-page/my-trip/my-trip.component';
 import { HttpClientModule } from '@angular/common/http';
+import { NotificationToastComponent } from './Component/notification-toast/notification-toast.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +55,8 @@ import { HttpClientModule } from '@angular/common/http';
     BusBookingFormComponent,
     PaymentPageComponent,
     ProfilePageComponent,
-    MyTripComponent
+    MyTripComponent,
+    NotificationToastComponent,
   ],
   imports: [
     BrowserModule,

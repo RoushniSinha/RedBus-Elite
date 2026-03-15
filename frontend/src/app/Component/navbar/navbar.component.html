@@ -89,7 +89,33 @@
           </mat-menu>
     </div>
 
+    <!-- ── Elite Navigation Links ── -->
+    <div class="hidden md:flex items-center gap-1 ml-2">
+      <a (click)="navigate('/community')"
+         class="flex items-center gap-1 px-2 py-1.5 text-xs rounded-lg cursor-pointer
+                hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">
+        🗺 Community
+      </a>
+      <a (click)="navigate('/routes')"
+         class="flex items-center gap-1 px-2 py-1.5 text-xs rounded-lg cursor-pointer
+                hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">
+        📍 Routes
+      </a>
+      <a (click)="navigate('/reviews')"
+         class="flex items-center gap-1 px-2 py-1.5 text-xs rounded-lg cursor-pointer
+                hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">
+        ⭐ Reviews
+      </a>
+    </div>
 
-
+    <!-- ── Dark / Light Theme Toggle ── -->
+    <button (click)="themeService.toggleTheme()"
+            title="Toggle dark mode"
+            aria-label="Toggle dark mode"
+            class="ml-2 flex items-center justify-center w-9 h-9 rounded-full
+                   hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+      <span *ngIf="!themeService.isDark()">🌙</span>
+      <span *ngIf="themeService.isDark()">☀️</span>
+    </button>
 
 </nav>

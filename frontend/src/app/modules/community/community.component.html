@@ -1,0 +1,72 @@
+<section class="min-h-screen bg-white dark:bg-black px-4 py-10 transition-colors duration-300">
+
+  <!-- Page Header -->
+  <div class="max-w-6xl mx-auto mb-8 text-center">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Community Travel Stories</h1>
+    <p class="mt-2 text-gray-500 dark:text-gray-400">Real journeys shared by real travellers on RedBus Elite</p>
+  </div>
+
+  <!-- Loading Skeleton -->
+  <div *ngIf="loading()" class="max-w-6xl mx-auto columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+    <div *ngFor="let i of [1,2,3,4,5]"
+         class="break-inside-avoid rounded-2xl bg-gray-100 dark:bg-gray-900 animate-pulse h-72"></div>
+  </div>
+
+  <!-- Masonry Grid Feed -->
+  <div *ngIf="!loading()"
+       class="max-w-6xl mx-auto columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+
+    <article *ngFor="let story of stories()"
+             class="break-inside-avoid rounded-2xl overflow-hidden shadow-md
+                    bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800
+                    hover:shadow-xl transition-shadow duration-300">
+
+      <!-- Story Image -->
+      <img *ngIf="story.mediaUrls?.length"
+           [src]="story.mediaUrls[0]"
+           [alt]="story.title"
+           class="w-full h-48 object-cover" />
+
+      <!-- Story Body -->
+      <div class="p-5">
+
+        <!-- Author & Date -->
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-semibold text-red-600 dark:text-red-400">
+            {{ story.author }}
+          </span>
+          <span class="text-xs text-gray-400 dark:text-gray-500">
+            {{ story.createdAt | date:'mediumDate' }}
+          </span>
+        </div>
+
+        <!-- Title -->
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
+          {{ story.title }}
+        </h2>
+
+        <!-- Content excerpt -->
+        <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-4 leading-relaxed">
+          {{ story.content }}
+        </p>
+
+        <!-- Footer: Moderation badge -->
+        <div class="mt-4 flex items-center justify-between">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [ngClass]="getModerationBadgeClass(story.moderationStatus)">
+            {{ story.moderationStatus }}
+          </span>
+
+          <!-- Extra media count badge -->
+          <span *ngIf="story.mediaUrls && story.mediaUrls.length > 1"
+                class="text-xs text-gray-400 dark:text-gray-500">
+            +{{ story.mediaUrls.length - 1 }} photo(s)
+          </span>
+        </div>
+
+      </div>
+    </article>
+
+  </div>
+
+</section>
