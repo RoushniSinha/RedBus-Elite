@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express=require('express')
 const bodyparser=require('body-parser')
 const cors =require('cors')
@@ -14,7 +15,10 @@ app.use(bookingroute)
 app.use(routesroute)
 app.use(customerroutes)
 
-const DBURL="mongodb+srv://admin:admin@tedbus.vqk1yid.mongodb.net/?retryWrites=true&w=majority&appName=tedbus"
+const DBURL=process.env.MONGODB_URI
+if (!DBURL) {
+    throw new Error('MONGODB_URI environment variable is not set. Please configure it in your .env file.')
+}
 mongoose.connect(DBURL)
 .then(()=> console.log("Mongodb connected"))
 .catch(err=> console.error('Mongodb connection error:' ,err))
@@ -23,7 +27,7 @@ app.get('/',(req,res)=>{
     res.send('Hello , Ted bus is working')
 })
 
-const PORT= 5000
+const PORT= process.env.PORT || 5000
 app.listen(PORT,()=>{
     console.log(`server is running on port ${PORT}`)
 })
