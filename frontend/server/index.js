@@ -11,9 +11,15 @@ app.use(bodyparser.json())
 const customerroutes=require("./routes/customer");
 const routesroute=require("./routes/route");
 const bookingroute=require("./routes/booking")
+const travelStoryRoute=require("./routes/travelStory");
+const reviewRoute=require("./routes/review");
+const routePlanningRoute=require("./routes/routePlanning");
 app.use(bookingroute)
 app.use(routesroute)
 app.use(customerroutes)
+app.use(travelStoryRoute)
+app.use(reviewRoute)
+app.use(routePlanningRoute)
 
 const DBURL=process.env.MONGODB_URI
 if (!DBURL) {
